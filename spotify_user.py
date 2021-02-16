@@ -111,10 +111,9 @@ class SpotifyUser:
             headers={
                 'Content-Type': 'application/json',
                 'Authorization': f'Bearer {self.auth_token}', })
-        if response.status_code in range(200, 299):
-            pass
-        else:
-            raise RuntimeError('Error: invalid status code, ensure the token is correct ')
+        
+        
+        SpotifyUser._check_status_code(response)
         return response.json()
 
     def _post_api_request(self, url, data):
@@ -125,8 +124,16 @@ class SpotifyUser:
                 'Content-Type': 'application/json',
                 'Authorization': f'Bearer {self.auth_token}',
             })
+        SpotifyUser._check_status_code(response)
         return response
-
+    
+    @staticmethod
+    def _check_status_code(response):
+        if response.status_code in range(200, 299):
+            print("Token is valid and we are good to go")
+        else:
+            raise RuntimeError("Error: invalid status code, ensure the token is correct')
+         
     def get_user_tracks(self, response_json):
         artists = []
         tracks = []
